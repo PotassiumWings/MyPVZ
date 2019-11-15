@@ -194,7 +194,7 @@ public class Plant extends JLabel implements Runnable {
     // price attack hp sumpic canchange
     public Plant SunFlower() {
         Plant tempPlant = new Plant("SunFlower", 50, 0, 300, 17, true);
-        tempPlant.CD = 24000 / 90 / 2;
+        tempPlant.CD = 24000 / 90;
         tempPlant.cardCD = 1000;//7500;
         tempPlant.sleepTime = 90;
         return tempPlant;

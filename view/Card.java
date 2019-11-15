@@ -31,7 +31,7 @@ public class Card extends JLabel implements MouseListener, Runnable {
 
     private Map<String, Plant> plantMap;
     private Controller controller;
-    private int y;
+    //private int y;
 
     private Rectangle rectangle;//卡片位置
 
@@ -68,7 +68,7 @@ public class Card extends JLabel implements MouseListener, Runnable {
         this.cardWidth = cardLight.getIconWidth();
         this.price = plantMap.get(cardName).getPrice();
         this.cd = plantMap.get(cardName).getCardCD();
-        this.y = card.getIconHeight();
+        //this.y = card.getIconHeight();
     }
 
     public void check(int SunCount) {//能否选择这个卡，能：light，否：dark
