@@ -36,17 +36,19 @@ SunProducer.java
 
 SunProducingLogic
 
-**2019.11.14**
+**2019.11.15**
 
 Zombie.java
 
+ZombieProducer.java
+
 ZombieLogic
 
+Bullet.java
+
+CollapseLogic
+
 **TO-DO LIST** 
-
-ZombieProducing
-
-Bullet
 
 add new Plants and their logic
 
