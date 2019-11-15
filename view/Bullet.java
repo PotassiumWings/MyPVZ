@@ -1,0 +1,75 @@
+package view;
+
+import controller.*;
+import javax.swing.*;
+import java.awt.*;
+
+public class Bullet extends JLabel implements Runnable {
+
+    private static final long serialVersionUID = 1L;
+    private Controller controller;
+    private ImageIcon img;
+    private int x, y, row;
+
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D) g;
+        g2.drawImage(img.getImage(), 0, 0, img.getIconWidth(), img.getIconHeight(),  this);
+    }
+
+    public Bullet() {
+    }
+
+    public Bullet(Controller controller, int row, int column) {
+        setVisible(true);
+        img = new ImageIcon("img\\Bullets\\PeaShooter.png");
+        this.controller = controller;
+        this.row = row;
+        this.x = 40 + column * 80 + 40;
+        this.y = 90 + row * 100;
+        this.setBounds(x, y, img.getIconWidth(), img.getIconHeight());
+        controller.getLayeredPane().add(this, new Integer(500));
+    }
+
+    public Bullet Pea(Controller controller, int row, int column) {
+        Bullet tempBullet = new Bullet(controller, row, column);
+        tempBullet.img = new ImageIcon("img\\Bullets\\PeaShooter.png");
+        return tempBullet;
+    }
+
+    public void bulletAttack(Zombie zombie) {
+        zombie.reduceHP(20);
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+            Zombie tempZombie = controller.getAttackedZombie(row, x - 40);
+            if (tempZombie != null) {
+                this.bulletAttack(tempZombie);
+                break;
+            }
+            try {
+                Thread.sleep(5);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            x += 5;
+            this.setBounds(x, y, img.getIconWidth(), img.getIconHeight());
+            this.repaint();
+            if (x > 810)
+                break;
+        }
+        // boom
+        img = new ImageIcon("img\\Bullets\\PeaShooterHit.png");
+        try {
+            Thread.sleep(150);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        setVisible(false);
+        Thread.currentThread().interrupt();
+    }
+    
+}

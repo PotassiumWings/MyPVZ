@@ -10,7 +10,6 @@ import javax.swing.*;
 public class GameboardView extends JLayeredPane {
 
     private static final long serialVersionUID = 1L;
-    Plant[][] plants = new Plant[5][9];
     private JFrame GameFrame;
     private ImageIcon panel, cardboard;
     private JPanel Panel;
@@ -18,9 +17,9 @@ public class GameboardView extends JLayeredPane {
 
     Controller controller;
 
-    int x = -10;
-    boolean flag = false;
-    int direction = 1;
+    private int x = -10;
+    private boolean flag = false;
+    private int direction = 1;
     private JLabel SunLabel;
 
     class PaintThread implements Runnable {
@@ -52,29 +51,22 @@ public class GameboardView extends JLayeredPane {
                 }
                 int j=i-551;
                 int delaytime=
-                    i<1?12:
-                    i<2?11:
-                    i<3?10:
-                    i<4?9:
-                    i<5?8:
-                    i<6?7:
-                    i<7?6:
-                    i<8?5:
-                    i<9?4:
-                    i<12?3:
-                    i<17?2:
-                    i<520?1:
-                    i<525?2:
-                    i<529?3:
-                    i<533?4:
-                    i<536?5:
-                    i<539?6:
-                    i<541?8:
-                    i<544?9:
-                    i<547?10:
-                    i<548?11:
-                    i<549?12:
-                    i<550?13:14;
+                    i<1?10:
+                    i<2?9:
+                    i<3?8:
+                    i<4?7:
+                    i<5?6:
+                    i<6?5:
+                    i<7?4:
+                    i<8?3:
+                    i<9?2:
+                    i<534?1:
+                    i<537?2:
+                    i<540?3:
+                    i<544?4:
+                    i<547?5:
+                    i<549?6:
+                    i<550?8:14;
                 if(j>0){
                     delaytime=
                     j<1?12:
@@ -86,20 +78,15 @@ public class GameboardView extends JLayeredPane {
                     j<7?6:
                     j<8?5:
                     j<9?4:
-                    j<12?3:
-                    j<17?2:
-                    j<304?1:
-                    j<309?2:
-                    j<314?3:
-                    j<317?4:
-                    j<320?5:
-                    j<323?6:
-                    j<326?8:
-                    j<329?9:
-                    j<331?10:
-                    j<332?11:
-                    j<333?12:
-                    j<334?13:14;
+                    j<10?3:
+                    j<12?2:
+                    j<314?1:
+                    j<319?2:
+                    j<324?3:
+                    j<327?4:
+                    j<330?5:
+                    j<333?6:
+                    j<334?8:14;
                 }
                 try {
                     Thread.sleep(delaytime);
@@ -218,11 +205,14 @@ public class GameboardView extends JLayeredPane {
         Thread sunThread=new Thread(new SunProducer(controller));//produce sun
         sunThread.start();
 
+        Thread zombieThread=new Thread(new ZombieProducer(controller));//produce zombie
+        zombieThread.start();
+
         JPanel topPanel = controller.getTopPanel();
         topPanel.setVisible(false);
         topPanel.setOpaque(false);
         topPanel.setBounds(0,0, panel.getIconWidth(), panel.getIconHeight());
-        GameboardView.this.add(topPanel, new Integer(999));
+        GameboardView.this.add(topPanel, new Integer(114514));
 
     }
     

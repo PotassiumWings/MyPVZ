@@ -25,7 +25,6 @@ public class Card extends JLabel implements MouseListener, Runnable {
     private ImageIcon card;
     private ImageIcon cardLight;
     private ImageIcon cardDark;
-    //private ImageIcon card3;
 
     private ImageIcon preImg;
     private ImageIcon blurImg;
@@ -60,7 +59,6 @@ public class Card extends JLabel implements MouseListener, Runnable {
         this.cardName = name;
         this.cardLight = new ImageIcon("Img\\Cards\\" + cardName + "0.png");
         this.cardDark = new ImageIcon("Img\\Cards\\" + cardName + "1.png");
-        //this.card3 = new ImageIcon("Img\\Cards\\" + cardName + "2.png");
         this.preImg = new ImageIcon("img\\" + cardName + "\\" + cardName + "_0.png ");
         this.blurImg = new ImageIcon("img\\Blurs\\" + cardName + ".png ");
         this.card = cardDark;
@@ -113,7 +111,7 @@ public class Card extends JLabel implements MouseListener, Runnable {
         //int h=card.getIconHeight();
         g.drawImage(card.getImage(), 0, 0, card.getIconWidth(), card.getIconHeight(), this);
         //g.drawImage(card.getImage(), 0, h-h*totTime/cd, card.getIconWidth(), h*totTime/cd, this);
-        g.drawImage(cardDark.getImage(), 0, y, card.getIconWidth(), card.getIconHeight(), this);
+        //g.drawImage(cardDark.getImage(), 0, y, card.getIconWidth(), card.getIconHeight(), this);
     }
 
     public void selected() {//卡牌被选中

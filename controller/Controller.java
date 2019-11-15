@@ -5,8 +5,11 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -45,6 +48,36 @@ public class Controller {
 
     //state
     public boolean isRunning=false;
+
+    //Zombies
+    public List<ArrayList<Zombie>> Zombies=new LinkedList<>();
+
+    public void addZombie(Zombie zombie,int row){
+        Zombies.get(row).add(zombie);
+    }
+
+    public void deleteZombie(Zombie zombie,int row){
+        for(Zombie tempZombie: Zombies.get(row)){
+            if(tempZombie==zombie){
+                Zombies.get(row).remove(tempZombie);
+                return;
+            }
+        }
+        assert(false);
+    }
+
+    public Zombie getAttackedZombie(int row,int x){
+        for(Zombie tempZombie: Zombies.get(row)){
+            if(tempZombie.getXPos()>=x-2&&tempZombie.getXPos()<=x+2){
+                return tempZombie;
+            }
+        }
+        return null;
+    }
+
+    public Plant[][] getPlants(){
+        return this.plants;
+    }
 
     public void setLayeredPane(JLayeredPane gameboardView) {
         this.layeredPane = gameboardView;
@@ -108,6 +141,10 @@ public class Controller {
 
     public Card getCard(){
         return card;
+    }
+
+    public boolean haveZombie(int row){
+        return Zombies.get(row).size()!=0;
     }
 
     //鼠标移动效果，选中的植物
@@ -248,6 +285,9 @@ public class Controller {
     
     public Controller(){
         setCardMap();
+        for (int i=0 ; i<5 ; i++) {
+            Zombies.add(new ArrayList<>());
+        }
         cardNum=0;
         this.setSunCount(150);
         this.topPanel.addMouseMotionListener(new myMouseListener(this.topPanel));

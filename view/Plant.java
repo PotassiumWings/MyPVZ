@@ -12,7 +12,7 @@ public class Plant extends JLabel implements Runnable {
     protected ImageIcon img;
 
     protected int hp = 0;
-    //private int attack = 0;
+    // private int attack = 0;
     private int price = 0;
 
     private int pic = 0;
@@ -30,11 +30,11 @@ public class Plant extends JLabel implements Runnable {
     private int cardCD;// 卡片冷却时间
 
     // 实现一些接口
-    public int getR(){
+    public int getR() {
         return row;
     }
 
-    public int getC(){
+    public int getC() {
         return column;
     }
 
@@ -50,12 +50,12 @@ public class Plant extends JLabel implements Runnable {
         return Cnow;
     }
 
-    public int getPic(){
+    public int getPic() {
         return pic;
     }
 
     public void setCnow(int Cnow) {
-        this.Cnow=Cnow;
+        this.Cnow = Cnow;
     }
 
     public void setPos(int row, int column) {
@@ -97,7 +97,7 @@ public class Plant extends JLabel implements Runnable {
         this.name = null;
         this.price = 0;
         this.hp = 0;
-        //this.attack = 0;
+        // this.attack = 0;
         this.SumPic = 0;
     }
 
@@ -111,7 +111,7 @@ public class Plant extends JLabel implements Runnable {
         this.name = name;
         this.price = price;
         this.hp = hp;
-        //this.attack = attack;
+        // this.attack = attack;
         this.SumPic = SumPic;
     }
 
@@ -120,17 +120,15 @@ public class Plant extends JLabel implements Runnable {
         img = new ImageIcon("img\\" + this.name + "\\" + this.name + "_" + pic + ".png");
     }
 
-    void attacked() {
-        this.hp--;
-        if (hp == 0) {
-            die();
-        }
+    void attacked(int x) {
+        this.hp -= x;
     }
 
     public void die() {
         // System.out.println(name + " is dead.");
         controller.plantDeath(row, column);
         this.setVisible(false);
+        Thread.currentThread().interrupt();
     }
 
     public void attack() {
@@ -145,10 +143,10 @@ public class Plant extends JLabel implements Runnable {
         ImageIcon shadow = new ImageIcon("img\\shadow.png");
         g2.drawImage(shadow.getImage(), -11, 45, shadow.getIconWidth(), shadow.getIconHeight(), null);
         g.drawImage(img.getImage(), 0, 0, img.getIconWidth(), img.getIconHeight(), null);
-        if(getName()=="SunFlower"){
-            if(this.getCnow()>261){
-                ImageIcon tempImg=new ImageIcon("img\\GoldenSunflower\\Frame"+getPic()+".png");
-                g.drawImage(tempImg.getImage(),0,-3,img.getIconWidth(), img.getIconHeight(),  null);
+        if (getName() == "SunFlower") {
+            if (this.getCnow() > 261) {
+                ImageIcon tempImg = new ImageIcon("img\\GoldenSunflower\\Frame" + getPic() + ".png");
+                g.drawImage(tempImg.getImage(), 0, -3, img.getIconWidth(), img.getIconHeight(), null);
             }
         }
     }
@@ -156,9 +154,10 @@ public class Plant extends JLabel implements Runnable {
     void accumulate() {// accumulate to CD?
         if (this.canChange == false)
             return;
-        if(getName()=="SunFlower"){
-            if(Cnow<=261)this.picChange();
-        }else{
+        if (getName() == "SunFlower") {
+            if (Cnow <= 261)
+                this.picChange();
+        } else {
             this.picChange();
         }
         this.Cnow = this.Cnow + 1;
@@ -166,37 +165,45 @@ public class Plant extends JLabel implements Runnable {
 
     @Override
     public void run() {
-        while (hp >= 0) {
-            try {
-                Thread.sleep(sleepTime);
-                this.accumulate();
-                if(this.getCnow()>=this.getCD()){
-                    this.setCnow(0);
-                    if(getName()=="SunFlower"){
-                        new Thread(new Sun(getController(), getR(), getC())).start();
-                    }
+        while (hp > 0) {
+            this.accumulate();
+            if (this.getCnow() >= this.getCD()) {
+                this.setCnow(0);
+                if (getName() == "SunFlower") {
+                    new Thread(new Sun(getController(), getR(), getC())).start();
+                } else if (getName() == "PeaShooter") {
+                    if (controller.haveZombie(row))
+                        new Thread(new Bullet(getController(), getR(), getC())).start();
+                    else
+                        this.setCnow(CD);
                 }
-                this.repaint();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            }
+            this.repaint();
+            for (int i = 0; hp > 0 && i < 10; i++) {
+                try {
+                    Thread.sleep(sleepTime / 10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
+        die();
     }
 
     // various plants
     // price attack hp sumpic canchange
     public Plant SunFlower() {
         Plant tempPlant = new Plant("SunFlower", 50, 0, 300, 17, true);
-        tempPlant.CD = 24000 / 90;
-        tempPlant.cardCD = 7500;
+        tempPlant.CD = 24000 / 90 / 2;
+        tempPlant.cardCD = 1000;//7500;
         tempPlant.sleepTime = 90;
         return tempPlant;
     }
 
     public Plant PeaShooter() {
         Plant tempPlant = new Plant("PeaShooter", 100, 0, 300, 13, true);
-        tempPlant.CD = 24000 / 90;
-        tempPlant.cardCD = 7500;
+        tempPlant.CD = 500 / 90;
+        tempPlant.cardCD = 1000;//7500;
         tempPlant.sleepTime = 90;
         return tempPlant;
     }
