@@ -18,8 +18,8 @@ public class SunProducer implements Runnable{
         }
         while (controller.isRunning){
             try {
-                Thread.sleep((int) (Math.random()*1000)+5000);
-                //5~6s随机生成一个
+                Thread.sleep((int) (Math.random()*1000)+4000);
+                //4-5s随机生成一个
                 new Thread(new Sun(controller)).start();
             } catch (InterruptedException e) {
                 e.printStackTrace();

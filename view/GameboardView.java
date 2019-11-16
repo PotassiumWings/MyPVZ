@@ -193,6 +193,12 @@ public class GameboardView extends JLayeredPane {
             card2.setBounds(142, 7, card2.getCardWidth(), card2.getCardHeight());
             controller.addCard(card2);
             Cardboard.add(card2);
+            
+            Card card3 = new Card("Repeater",controller);
+            card3.setRectangle(201, 7, card3.getCardWidth(), card3.getCardHeight());
+            card3.setBounds(201, 7, card3.getCardWidth(), card3.getCardHeight());
+            controller.addCard(card3);
+            Cardboard.add(card3);
         }else{
             x = -215;
             Cardboard.setBounds(20, 5, cardboard.getIconWidth(), 

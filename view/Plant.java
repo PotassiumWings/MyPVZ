@@ -79,19 +79,6 @@ public class Plant extends JLabel implements Runnable {
         return this.price;
     }
 
-    public Plant getPlant(String name) {
-        Plant newPlant = null;
-        switch (name) {
-        case "SunFlower":
-            newPlant = new Plant().SunFlower();
-            break;
-        case "PeaShooter":
-            newPlant = new Plant().PeaShooter();
-            break;
-        }
-        return newPlant;
-    }
-
     public Plant() {
         this.img = null;
         this.name = null;
@@ -131,10 +118,6 @@ public class Plant extends JLabel implements Runnable {
         Thread.currentThread().interrupt();
     }
 
-    public void attack() {
-        // to-do
-    }
-
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -146,7 +129,7 @@ public class Plant extends JLabel implements Runnable {
         if (getName() == "SunFlower") {
             if (this.getCnow() > 261) {
                 ImageIcon tempImg = new ImageIcon("img\\GoldenSunflower\\Frame" + getPic() + ".png");
-                g.drawImage(tempImg.getImage(), 0, -3, img.getIconWidth(), img.getIconHeight(), null);
+                g.drawImage(tempImg.getImage(), 0, 0, tempImg.getIconWidth(), tempImg.getIconHeight(), null);
             }
         }
     }
@@ -162,20 +145,53 @@ public class Plant extends JLabel implements Runnable {
         }
         this.Cnow = this.Cnow + 1;
     }
+    
+    public Plant getPlant(String name) {
+        Plant newPlant = null;
+        switch (name) {
+            case "SunFlower":
+                newPlant = new Plant().SunFlower();
+                break;
+            case "PeaShooter":
+                newPlant = new Plant().PeaShooter();
+                break;
+            case "Repeater":
+                newPlant = new Plant().Repeater();
+                break;
+        }
+        return newPlant;
+    }
 
     @Override
     public void run() {
+        boolean hasAttacked = false;//repeater
         while (hp > 0) {
             this.accumulate();
-            if (this.getCnow() >= this.getCD()) {
-                this.setCnow(0);
-                if (getName() == "SunFlower") {
+            if (getName() == "SunFlower") {
+                if (this.getCnow() >= this.getCD()) {
+                    this.setCnow(0);
                     new Thread(new Sun(getController(), getR(), getC())).start();
-                } else if (getName() == "PeaShooter") {
-                    if (controller.haveZombie(row))
+                }
+            } else if (getName() == "PeaShooter") {
+                if (this.getCnow() >= this.getCD()) {
+                    if (controller.haveZombie(row)){
+                        this.setCnow(0);
                         new Thread(new Bullet(getController(), getR(), getC())).start();
+                    }
                     else
                         this.setCnow(CD);
+                }
+            } else if (getName() == "Repeater") {
+                if (this.getCnow() >= this.getCD()) {
+                    hasAttacked = true;
+                    if (controller.haveZombie(row)){
+                        this.setCnow(0);
+                        new Thread(new Bullet(getController(), getR(), getC())).start();
+                    }
+                    else
+                        this.setCnow(CD);
+                }else if(this.getCnow() == this.getCD()/4 && hasAttacked){
+                    new Thread(new Bullet(getController(), getR(), getC())).start();
                 }
             }
             this.repaint();
@@ -195,18 +211,27 @@ public class Plant extends JLabel implements Runnable {
     public Plant SunFlower() {
         Plant tempPlant = new Plant("SunFlower", 50, 0, 300, 17, true);
         tempPlant.CD = 24000 / 90;
-        tempPlant.cardCD = 1000;//7500;
+        tempPlant.cardCD = 7500;//7500;
         tempPlant.sleepTime = 90;
         return tempPlant;
     }
 
     public Plant PeaShooter() {
         Plant tempPlant = new Plant("PeaShooter", 100, 0, 300, 13, true);
-        tempPlant.CD = 500 / 90;
+        tempPlant.CD = 1000 / 90;
         tempPlant.cardCD = 1000;//7500;
         tempPlant.sleepTime = 90;
         return tempPlant;
     }
+
+    public Plant Repeater() {
+        Plant tempPlant = new Plant("Repeater", 200, 0, 300, 15, true);
+        tempPlant.CD = 1000 / 90;
+        tempPlant.cardCD = 7500;//7500;
+        tempPlant.sleepTime = 90;
+        return tempPlant;
+    }
     // TO-DO:PLANTS
+    //add plant: getplant(), "name"(), run(), (paintComponent())
 
 }

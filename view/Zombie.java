@@ -28,6 +28,7 @@ public class Zombie extends JLabel implements Runnable {
 
     private ImageIcon img;
     private int[] sumPic = new int[3];
+    private int moveSum, attackSum, lostheadattackSum, lostheadSum, dieSum, boomSum;
     private int nowSumPic;
     private int nowPic = 0;
     private int type;
@@ -56,7 +57,6 @@ public class Zombie extends JLabel implements Runnable {
         this.sumPic[1] = 31;
         this.sumPic[2] = 18;
         this.setState(MOVE);
-        controller.getLayeredPane().add(this, new Integer(400));
     }
 
     @Override
@@ -67,27 +67,27 @@ public class Zombie extends JLabel implements Runnable {
         img = new ImageIcon("img\\shadow.png");
         g.drawImage(img.getImage(), 70, 115, img.getIconWidth(), img.getIconHeight(), this);
         if (state == MOVE) {
-            Img = new ImageIcon("img\\Zombie" + type + "\\Frame" + nowPic + ".png");
+            Img = new ImageIcon("img\\"+name+"\\Zombie" + (type + 1) + "\\Frame" + nowPic + ".png");
             g2.drawImage(Img.getImage(), 0, 0, Img.getIconWidth(), Img.getIconHeight(), this);
         } else if (state == ATTACK) {
-            Img = new ImageIcon("img\\ZombieAttack\\Frame" + nowPic + ".png");
+            Img = new ImageIcon("img\\"+name+"\\ZombieAttack\\Frame" + nowPic + ".png");
             g2.drawImage(Img.getImage(), 0, 0, Img.getIconWidth(), Img.getIconHeight(), this);
         } else if (state == LOSTHEAD) {
-            Img = new ImageIcon("img\\ZombieLostHead\\Frame" + nowPic + ".png");
+            Img = new ImageIcon("img\\"+name+"\\ZombieLostHead\\Frame" + nowPic + ".png");
             g2.drawImage(Img.getImage(), 0, 0, Img.getIconWidth(), Img.getIconHeight(), this);
             // 头动画只持续前10帧
             if (nowPic < 10) {
-                Img = new ImageIcon("img\\ZombieHead\\Frame" + nowPic + ".png");
+                Img = new ImageIcon("img\\"+name+"\\ZombieHead\\Frame" + nowPic + ".png");
                 g2.drawImage(Img.getImage(), 60, 0, Img.getIconWidth(), Img.getIconHeight(), this);
             }
         } else if (state == LOSTHEADATTACK) {
-            Img = new ImageIcon("img\\ZombieLostHeadAttack\\Frame" + nowPic + ".png");
+            Img = new ImageIcon("img\\"+name+"\\ZombieLostHeadAttack\\Frame" + nowPic + ".png");
             g2.drawImage(Img.getImage(), 0, 0, Img.getIconWidth(), Img.getIconHeight(), this);
         } else if (state == DIE) {
-            Img = new ImageIcon("img\\ZombieDie\\Frame" + nowPic + ".png");
+            Img = new ImageIcon("img\\"+name+"\\ZombieDie\\Frame" + nowPic + ".png");
             g2.drawImage(Img.getImage(), 0, 0, Img.getIconWidth(), Img.getIconHeight(), this);
         } else if (state == BOOM) {
-            Img = new ImageIcon("img\\ZombieBoom\\Frame" + nowPic + ".png");
+            Img = new ImageIcon("img\\"+name+"\\ZombieBoom\\Frame" + nowPic + ".png");
             g2.drawImage(Img.getImage(), 0, 0, Img.getIconWidth(), Img.getIconHeight(), this);
         }
     }
@@ -95,6 +95,26 @@ public class Zombie extends JLabel implements Runnable {
     public Zombie normalZombie(Controller controller, int row) {
         Zombie tempZombie = new Zombie(controller, "NormalZombie", 200, 70, row, 4700 / 80);
         tempZombie.type = (int) Math.random() * 3;
+        tempZombie.moveSum=tempZombie.sumPic[type];
+        tempZombie.attackSum=21;
+        tempZombie.lostheadSum=17;
+        tempZombie.lostheadattackSum=11;
+        tempZombie.dieSum=17;
+        tempZombie.boomSum=17;
+        controller.getLayeredPane().add(tempZombie, new Integer(400));
+        return tempZombie;
+    }
+
+    public Zombie xsyZombie(Controller controller, int row) {
+        Zombie tempZombie = new Zombie(controller, "xsyZombie", 400, 0, row, 4700 / 80);
+        tempZombie.type = 0;
+        tempZombie.moveSum=1;
+        tempZombie.attackSum=1;
+        tempZombie.lostheadSum=1;
+        tempZombie.lostheadattackSum=1;
+        tempZombie.dieSum=8;
+        tempZombie.boomSum=1;
+        controller.getLayeredPane().add(tempZombie, new Integer(400));
         return tempZombie;
     }
 
@@ -102,17 +122,17 @@ public class Zombie extends JLabel implements Runnable {
         this.state = state;
         nowPic = 0;
         if (state == MOVE) {
-            this.nowSumPic = sumPic[type];
+            this.nowSumPic = moveSum;
         } else if (state == ATTACK) {
-            this.nowSumPic = 21;
+            this.nowSumPic = attackSum;
         } else if (state == LOSTHEAD) {
-            this.nowSumPic = 18;
+            this.nowSumPic = lostheadSum;
         } else if (state == LOSTHEADATTACK) {
-            this.nowSumPic = 11;
+            this.nowSumPic = lostheadattackSum;
         } else if (state == DIE) {
-            this.nowSumPic = 14;
+            this.nowSumPic = dieSum;
         } else if (state == BOOM) {
-            this.nowSumPic = 20;
+            this.nowSumPic = boomSum;
         }
     }
 
@@ -120,10 +140,10 @@ public class Zombie extends JLabel implements Runnable {
         if (hp <= 0) {
             if (this.state != DIE && this.state != BOOM)
                 setState(DIE);
-        } else if (hp <= hp2) {
+        } else if (hp < hp2) {
             if (this.state == ATTACK)
                 setState(LOSTHEADATTACK);
-            else if(this.state != LOSTHEAD)
+            else if(this.state != LOSTHEAD && this.state != LOSTHEADATTACK)
                 setState(LOSTHEAD);
         }
     }
@@ -134,7 +154,7 @@ public class Zombie extends JLabel implements Runnable {
     }
 
     public boolean findPlant() {
-        if ((x + 60) / 80 >= 9)
+        if ((x + 60) / 80 >= 9 || (x + 60) / 80 < 0)
             return false;
         return controller.getPlants()[row][(x + 60) / 80] != null;
     }
@@ -152,6 +172,10 @@ public class Zombie extends JLabel implements Runnable {
             this.hp = 0;
             setState(BOOM);
         }
+    }
+
+    public void endThread(){
+        Thread.currentThread().interrupt();
     }
 
     @Override
@@ -178,12 +202,16 @@ public class Zombie extends JLabel implements Runnable {
                     this.repaint();
                 }
                 //120ms 
+                //System.out.println("name:"+name+"nowPic="+nowPic+"sumPic="+nowSumPic+"state="+state);
                 nowPic = (nowPic + 1) % nowSumPic;
+                if(x < -70){
+                    controller.endGame();
+                }
             }
 
             // ATTACK
             while (this.state == ATTACK) {
-                if (this.name == "NormalZombie") {
+                //if (this.name == "NormalZombie") {
                     // 普通僵尸的攻击方式：1s 200伤害，5ms 1伤害
                     // sleep 120ms change
                     for (int i = 0; i < 24 && this.state == ATTACK && findPlant(); i++) {
@@ -196,9 +224,10 @@ public class Zombie extends JLabel implements Runnable {
                     }
                     nowPic = (nowPic + 1) % nowSumPic;
                     this.repaint();
-                    if (!findPlant())
+                    if (!findPlant() && this.state == ATTACK)
                         setState(MOVE);// 不掉胳膊
-                }
+                    updateState();
+                //}
             }
 
         }
@@ -206,7 +235,7 @@ public class Zombie extends JLabel implements Runnable {
             // 临界状态
             while (this.state == LOSTHEAD || this.state == LOSTHEADATTACK) {
                 //sleep 60ms change
-                for(int j = 0; j < 2; j++) {
+                for(int j = 0; j < 2 && hp > 0; j++) {
                     for (int i = 0; i < 10 && hp > 0; i++) {
                         try {
                             Thread.sleep(6);
@@ -214,46 +243,45 @@ public class Zombie extends JLabel implements Runnable {
                             e.printStackTrace();
                         }
                     }
-                    this.x--;
-                    this.setBounds(x, y, 400, 300);
+                    if(this.state == LOSTHEAD){
+                        this.x--;
+                        this.setBounds(x, y, 400, 300);
+                    }
                     this.repaint();
                 }
                 //120ms 
                 nowPic = (nowPic + 1) % nowSumPic;
                 reduceHP(7);
-            }
-
-            controller.deleteZombie(this, row);
-
-            // 死亡
-            while (true) {
-                for (int i = 0; i < nowSumPic; i++) {
-                    //sleep 120ms change
-                    try {
-                        Thread.sleep(120);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    this.repaint();
-                    nowPic = (nowPic + 1) % nowSumPic;
+                if(x < -70){
+                    controller.endGame();
                 }
-                break;
             }
         }
-        while (this.state == BOOM) {
-            // 爆炸
-            while (true) {
-                for (int i = 0; i < nowSumPic; i++) {
-                    //sleep 50ms change
-                    try {
-                        Thread.sleep(50);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    this.repaint();
-                    nowPic = (nowPic + 1) % nowSumPic;
+        controller.deleteZombie(this, row);
+
+        // 死亡
+        if(this.state == DIE){       
+            for (nowPic = 0; nowPic < nowSumPic; nowPic++) {
+                //sleep 120ms change
+                try {
+                    Thread.sleep(120);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-                break;
+                this.repaint();
+            }
+        }
+
+        // 爆炸
+        if (this.state == BOOM) {
+            for (nowPic = 0; nowPic < nowSumPic; nowPic++) {
+                //sleep 120ms change
+                try {
+                    Thread.sleep(120);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                this.repaint();
             }
         }
         setVisible(false);

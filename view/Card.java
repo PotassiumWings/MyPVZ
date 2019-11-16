@@ -155,14 +155,14 @@ public class Card extends JLabel implements MouseListener, Runnable {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                totTime+=3;
-                if(totTime>=cd){
+                totTime += 3;
+                if(totTime >= cd){
                     break;
                 }
                 check(controller.getIntSunCount());
             }
-            totTime=0;
-            inCooling=false;
+            totTime = 0;
+            inCooling = false;
         }
     }
 

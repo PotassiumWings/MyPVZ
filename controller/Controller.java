@@ -75,6 +75,21 @@ public class Controller {
         return null;
     }
 
+    public void endGame(){
+        System.out.println("You Lost.");
+        for(int i = 0; i < numRow; i++){
+            for(int j = 0; j < numCol; j++){
+                if(plants[i][j] != null){
+                    plants[i][j].die();
+                }
+            }
+            for(Zombie zombie: Zombies.get(i)) {
+                zombie.endThread();
+            }
+        }
+        this.isRunning = false;
+    }
+
     public Plant[][] getPlants(){
         return this.plants;
     }
@@ -144,7 +159,12 @@ public class Controller {
     }
 
     public boolean haveZombie(int row){
-        return Zombies.get(row).size()!=0;
+        for(Zombie zombie: Zombies.get(row)){
+            if(zombie.getXPos()<720){
+                return true;
+            }
+        }
+        return false;
     }
 
     //鼠标移动效果，选中的植物
@@ -179,8 +199,9 @@ public class Controller {
     }
 
     public void setCardMap() {
-        plantMap.put("SunFlower",new Plant().SunFlower());
-        plantMap.put("PeaShooter",new Plant().PeaShooter());
+        plantMap.put("SunFlower", new Plant().SunFlower());
+        plantMap.put("PeaShooter", new Plant().PeaShooter());
+        plantMap.put("Repeater", new Plant().Repeater());
     }
 
     public void addCard(Card card){
@@ -276,8 +297,6 @@ public class Controller {
     }
 
     public void checkCards(){
-        plantMap.put("SunFlower", new Plant().SunFlower());
-        plantMap.put("PeaShooter", new Plant().PeaShooter());
         for(int i=0;i<cardNum;i++){
             Cards[i].check(getIntSunCount());
         }
@@ -289,7 +308,7 @@ public class Controller {
             Zombies.add(new ArrayList<>());
         }
         cardNum=0;
-        this.setSunCount(150);
+        this.setSunCount(500);
         this.topPanel.addMouseMotionListener(new myMouseListener(this.topPanel));
         this.topPanel.addMouseListener(new myMouseListener(this.topPanel));
         this.topPanel.setVisible(false);

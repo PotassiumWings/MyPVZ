@@ -45,17 +45,17 @@ public class Bullet extends JLabel implements Runnable {
     @Override
     public void run() {
         while (true) {
-            Zombie tempZombie = controller.getAttackedZombie(row, x - 40);
+            Zombie tempZombie = controller.getAttackedZombie(row, x - 60);
             if (tempZombie != null) {
                 this.bulletAttack(tempZombie);
                 break;
             }
             try {
-                Thread.sleep(5);
+                Thread.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            x += 5;
+            x += 3;
             this.setBounds(x, y, img.getIconWidth(), img.getIconHeight());
             this.repaint();
             if (x > 810)

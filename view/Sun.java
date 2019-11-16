@@ -17,6 +17,7 @@ public class Sun extends JLabel implements Runnable {
     private boolean isCollected;
     private int nowPic;
     private static int totPic = 21;
+    // private static int totPic = 15;
     private Controller controller;
 
     private boolean drop;// 掉落还是随机生成
@@ -159,18 +160,18 @@ public class Sun extends JLabel implements Runnable {
         if (isCollected) {
             controller.addSunCount(25);
             controller.checkCards();
-            int dir = x < 33 ? -1 : 1;
-            for (int i = 1; (dir == 1 && x > 33 || x <= 33 && dir == -1) && y > 33; i++) {
+            int dir = x < 25 ? -1 : 1;
+            for (int i = 1; (dir == 1 && x > 25 || x <= 25 && dir == -1) && y > 25; i++) {
                 if (i % 10 == 0) {
                     this.picChange();
                 }
-                double ty = (x - 33) * (tempPoint.getY() - 33) / (tempPoint.getX() - 33) + 33;
+                double ty = (x - 25) * (tempPoint.getY() - 25) / (tempPoint.getX() - 25) + 25;
                 if ((ty <= y && dir == 1) || (ty >= y && dir == -1)) {
                     y -= 6;
                 } else {
                     x -= 6;
-                    if ((int) ((100 * x - 3200) / (tempPoint.getX() - 33)) != (int) ((100 * x - 3300)
-                            / (tempPoint.getX() - 33))) {
+                    if ((int) ((100 * x - 2400) / (tempPoint.getX() - 25)) != (int) ((100 * x - 2500)
+                            / (tempPoint.getX() - 25))) {
                         alpha -= (Math.random() >= 0.45) ? 1 : 0;
                         // System.out.println("alpha reduced from point ("+x+","+y+")");
                     }
@@ -198,6 +199,7 @@ public class Sun extends JLabel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         ImageIcon img = new ImageIcon("img\\Sun\\"+nowPic+".png");
+        //ImageIcon img = new ImageIcon("img\\Sun\\"+"etz"+nowPic+".png");
         image = img.getImage();
         Graphics2D g2 = (Graphics2D) g;
         g2.setComposite(AlphaComposite.SrcOver.derive((float) alpha / 100));
