@@ -31,17 +31,17 @@ public class Card extends JLabel implements MouseListener, Runnable {
 
     private Map<String, Plant> plantMap;
     private Controller controller;
-    //private int y;
+    // private int y;
 
-    private Rectangle rectangle;//卡片位置
+    private Rectangle rectangle;// 卡片位置
 
     private int index;
 
-    public int getIndex(){
+    public int getIndex() {
         return index;
     }
-    
-    public void setIndex(int index){
+
+    public void setIndex(int index) {
         this.index = index;
     }
 
@@ -68,10 +68,10 @@ public class Card extends JLabel implements MouseListener, Runnable {
         this.cardWidth = cardLight.getIconWidth();
         this.price = plantMap.get(cardName).getPrice();
         this.cd = plantMap.get(cardName).getCardCD();
-        //this.y = card.getIconHeight();
+        // this.y = card.getIconHeight();
     }
 
-    public void check(int SunCount) {//能否选择这个卡，能：light，否：dark
+    public void check(int SunCount) {// 能否选择这个卡，能：light，否：dark
         if (SunCount >= plantMap.get(this.cardName).getPrice() && !inCooling) {
             card = cardLight;
             this.repaint();
@@ -108,13 +108,15 @@ public class Card extends JLabel implements MouseListener, Runnable {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        //int h=card.getIconHeight();
+        // int h=card.getIconHeight();
         g.drawImage(card.getImage(), 0, 0, card.getIconWidth(), card.getIconHeight(), this);
-        //g.drawImage(card.getImage(), 0, h-h*totTime/cd, card.getIconWidth(), h*totTime/cd, this);
-        //g.drawImage(cardDark.getImage(), 0, y, card.getIconWidth(), card.getIconHeight(), this);
+        // g.drawImage(card.getImage(), 0, h-h*totTime/cd, card.getIconWidth(),
+        // h*totTime/cd, this);
+        // g.drawImage(cardDark.getImage(), 0, y, card.getIconWidth(),
+        // card.getIconHeight(), this);
     }
 
-    public void selected() {//卡牌被选中
+    public void selected() {// 卡牌被选中
         if (!inCooling && controller.getIntSunCount() >= this.getPrice()) {
             controller.getTopPanel().setVisible(true);
             controller.setPreImg(this.preImg);
@@ -122,7 +124,7 @@ public class Card extends JLabel implements MouseListener, Runnable {
             controller.setCard(this);
             controller.setSelectedIndex(index);
             controller.nowPlant = new Plant().getPlant(this.getCardName());
-            //System.out.println("Selected :" + controller.nowPlant.getName());
+            // System.out.println("Selected :" + controller.nowPlant.getName());
             inCooling = true;
             check(0);
         }
@@ -132,10 +134,22 @@ public class Card extends JLabel implements MouseListener, Runnable {
     public void mouseClicked(MouseEvent e) {
         selected();
     }
-    @Override public void mouseEntered(MouseEvent e) {}
-    @Override public void mouseExited(MouseEvent e) {}
-    @Override public void mousePressed(MouseEvent e) {}
-    @Override public void mouseReleased(MouseEvent e) {}
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+    }
 
     @Override
     public void run() {
@@ -149,14 +163,14 @@ public class Card extends JLabel implements MouseListener, Runnable {
                 }
             }
             check(controller.getIntSunCount());
-            while(controller.isRunning){
+            while (controller.isRunning) {
                 try {
                     Thread.sleep(3);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 totTime += 3;
-                if(totTime >= cd){
+                if (totTime >= cd) {
                     break;
                 }
                 check(controller.getIntSunCount());

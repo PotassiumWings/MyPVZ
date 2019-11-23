@@ -37,7 +37,7 @@ public class GameboardView extends JLayeredPane {
                 e.printStackTrace();
             }
 
-            //左右移动对准
+            // 左右移动对准
             for (int i = 0; i < 895; i++) {
                 // System.out.println("now x:" + x + ",i:" + i);
                 if (x <= -560 && !flag) {
@@ -49,72 +49,83 @@ public class GameboardView extends JLayeredPane {
                         e.printStackTrace();
                     }
                 }
-                int j=i-551;
-                int delaytime=
-                    i<1?10:
-                    i<2?9:
-                    i<3?8:
-                    i<4?7:
-                    i<5?6:
-                    i<6?5:
-                    i<7?4:
-                    i<8?3:
-                    i<9?2:
-                    i<534?1:
-                    i<537?2:
-                    i<540?3:
-                    i<544?4:
-                    i<547?5:
-                    i<549?6:
-                    i<550?8:14;
-                if(j>0){
-                    delaytime=
-                    j<1?12:
-                    j<2?11:
-                    j<3?10:
-                    j<4?9:
-                    j<5?8:
-                    j<6?7:
-                    j<7?6:
-                    j<8?5:
-                    j<9?4:
-                    j<10?3:
-                    j<12?2:
-                    j<314?1:
-                    j<319?2:
-                    j<324?3:
-                    j<327?4:
-                    j<330?5:
-                    j<333?6:
-                    j<334?8:14;
+                int j = i - 551;
+                int delaytime = i < 1 ? 10
+                        : i < 2 ? 9
+                                : i < 3 ? 8
+                                        : i < 4 ? 7
+                                                : i < 5 ? 6
+                                                        : i < 6 ? 5
+                                                                : i < 7 ? 4
+                                                                        : i < 8 ? 3
+                                                                                : i < 9 ? 2
+                                                                                        : i < 534 ? 1
+                                                                                                : i < 537 ? 2
+                                                                                                        : i < 540 ? 3
+                                                                                                                : i < 544
+                                                                                                                        ? 4
+                                                                                                                        : i < 547
+                                                                                                                                ? 5
+                                                                                                                                : i < 549
+                                                                                                                                        ? 6
+                                                                                                                                        : i < 550
+                                                                                                                                                ? 8
+                                                                                                                                                : 14;
+                if (j > 0) {
+                    delaytime = j < 1 ? 12
+                            : j < 2 ? 11
+                                    : j < 3 ? 10
+                                            : j < 4 ? 9
+                                                    : j < 5 ? 8
+                                                            : j < 6 ? 7
+                                                                    : j < 7 ? 6
+                                                                            : j < 8 ? 5
+                                                                                    : j < 9 ? 4
+                                                                                            : j < 10 ? 3
+                                                                                                    : j < 12 ? 2
+                                                                                                            : j < 314
+                                                                                                                    ? 1
+                                                                                                                    : j < 319
+                                                                                                                            ? 2
+                                                                                                                            : j < 324
+                                                                                                                                    ? 3
+                                                                                                                                    : j < 327
+                                                                                                                                            ? 4
+                                                                                                                                            : j < 330
+                                                                                                                                                    ? 5
+                                                                                                                                                    : j < 333
+                                                                                                                                                            ? 6
+                                                                                                                                                            : j < 334
+                                                                                                                                                                    ? 8
+                                                                                                                                                                    : 14;
                 }
                 try {
                     Thread.sleep(delaytime);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                x-=direction;
+                x -= direction;
                 Panel.repaint();
             }
 
-            //cardboard淡入
-            for (int y = -40 ; y <= 5; y++) {
-                Cardboard.setBounds(20,y,cardboard.getIconWidth(), cardboard.getIconHeight());
+            // cardboard淡入
+            for (int y = -40; y <= 5; y++) {
+                Cardboard.setBounds(20, y, cardboard.getIconWidth(), cardboard.getIconHeight());
                 try {
                     Thread.sleep(10);
-                }catch (InterruptedException e) {
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 Cardboard.repaint();
             }
 
-            //倒计时
+            // 倒计时
             JLabel label;
-            for (int i=1 ; i<=3 ; i++){
+            for (int i = 1; i <= 3; i++) {
                 try {
-                    label = new JLabel(new ImageIcon("img\\PrepareGrowPlants"+i+".png"));
-                    GameboardView.this.add(label,1);
-                    label.setBounds(250,200,300,200);
+                    label = new JLabel(new ImageIcon("img\\PrepareGrowPlants" + i + ".png"));
+                    GameboardView.this.add(label, 1);
+                    label.setBounds(250, 200, 300, 200);
                     Thread.sleep(700);
                     label.setVisible(false);
                 } catch (InterruptedException e) {
@@ -131,95 +142,103 @@ public class GameboardView extends JLayeredPane {
         }
     }
 
-
-    GameboardView(LaunchFrame launchframe){
-        this.controller=new Controller();
-        this.GameFrame=launchframe;
+    GameboardView(LaunchFrame launchframe) {
+        this.controller = new Controller();
+        this.GameFrame = launchframe;
         this.GameFrame.setContentPane(GameboardView.this);
         this.setVisible(true);
 
-        //bg
-        panel=new ImageIcon("img\\background1.jpg");
-        Panel=new JPanel(){
-			private static final long serialVersionUID = 1L;
-            public void paintComponent(Graphics g){
+        // bg
+        panel = new ImageIcon("img\\background1.jpg");
+        Panel = new JPanel() {
+            private static final long serialVersionUID = 1L;
+
+            public void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                g.drawImage(panel.getImage(),x,0,
-                            this.getWidth(),this.getHeight(),
-                            this);
+                g.drawImage(panel.getImage(), x, 0, this.getWidth(), this.getHeight(), this);
             }
         };
         Panel.setVisible(true);
-        Panel.setBounds(0,0,panel.getIconWidth(),panel.getIconHeight());
-        GameboardView.this.add(Panel,-1);
+        Panel.setBounds(0, 0, panel.getIconWidth(), panel.getIconHeight());
+        GameboardView.this.add(Panel, -1);
 
-        //cardboard
-        cardboard=new ImageIcon("img\\SeedBank.png");
-        Cardboard=new JPanel(){
+        // cardboard
+        cardboard = new ImageIcon("img\\SeedBank.png");
+        Cardboard = new JPanel() {
             private static final long serialVersionUID = 1L;
+
             public void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                g.drawImage(cardboard.getImage(),0,0,
-                            cardboard.getIconWidth(),
-                            cardboard.getIconHeight(),this);
+                g.drawImage(cardboard.getImage(), 0, 0, cardboard.getIconWidth(), cardboard.getIconHeight(), this);
             }
         };
         Cardboard.setVisible(true);
         Cardboard.setLayout(null);
-        GameboardView.this.add(Cardboard,0);
+        GameboardView.this.add(Cardboard, 0);
 
-        //sun
-        SunLabel = new JLabel(""+controller.getSunCount().getText(),JLabel.CENTER);
+        // sun
+        SunLabel = new JLabel("" + controller.getSunCount().getText(), JLabel.CENTER);
         SunLabel.setBounds(20, 60, 35, 20);
         Cardboard.add(SunLabel);
 
         controller.setLayeredPane(this);
-        //controller.setFrame(launchframe);
+        // controller.setFrame(launchframe);
         controller.setSunCount(SunLabel);
 
         Executor exec = Executors.newSingleThreadExecutor();
-        if(!flag){
-            Thread Animation=new Thread(new PaintThread(launchframe));
+        if (!flag) {
+            Thread Animation = new Thread(new PaintThread(launchframe));
             exec.execute(Animation);
 
-            Card card1 = new Card("SunFlower",controller);
+            Card card1 = new Card("SunFlower", controller);
             card1.setRectangle(83, 7, card1.getCardWidth(), card1.getCardHeight());
             card1.setBounds(83, 7, card1.getCardWidth(), card1.getCardHeight());
             controller.addCard(card1);
             Cardboard.add(card1);
-            
-            Card card2 = new Card("PeaShooter",controller);
+
+            Card card2 = new Card("PeaShooter", controller);
             card2.setRectangle(142, 7, card2.getCardWidth(), card2.getCardHeight());
             card2.setBounds(142, 7, card2.getCardWidth(), card2.getCardHeight());
             controller.addCard(card2);
             Cardboard.add(card2);
-            
-            Card card3 = new Card("Repeater",controller);
+
+            Card card3 = new Card("Repeater", controller);
             card3.setRectangle(201, 7, card3.getCardWidth(), card3.getCardHeight());
             card3.setBounds(201, 7, card3.getCardWidth(), card3.getCardHeight());
             controller.addCard(card3);
             Cardboard.add(card3);
-        }else{
+
+            Card card4 = new Card("CherryBomb", controller);
+            card4.setRectangle(260, 7, card4.getCardWidth(), card4.getCardHeight());
+            card4.setBounds(260, 7, card4.getCardWidth(), card4.getCardHeight());
+            controller.addCard(card4);
+            Cardboard.add(card4);
+
+            Card card5 = new Card("WallNut", controller);
+            card5.setRectangle(319, 7, card5.getCardWidth(), card5.getCardHeight());
+            card5.setBounds(319, 7, card5.getCardWidth(), card5.getCardHeight());
+            controller.addCard(card5);
+            Cardboard.add(card5);
+        } else {
             x = -215;
-            Cardboard.setBounds(20, 5, cardboard.getIconWidth(), 
-                                cardboard.getIconHeight());
+            Cardboard.setBounds(20, 5, cardboard.getIconWidth(), cardboard.getIconHeight());
             Panel.repaint();
             Panel.setVisible(true);
             controller.checkCards();
         }
 
-        Thread sunThread=new Thread(new SunProducer(controller));//produce sun
+        Thread sunThread = new Thread(new SunProducer(controller));// produce sun
         sunThread.start();
 
-        Thread zombieThread=new Thread(new ZombieProducer(controller));//produce zombie
+        Thread zombieThread = new Thread(new ZombieProducer(controller));// produce zombie
         zombieThread.start();
 
         JPanel topPanel = controller.getTopPanel();
         topPanel.setVisible(false);
         topPanel.setOpaque(false);
-        topPanel.setBounds(0,0, panel.getIconWidth(), panel.getIconHeight());
+        topPanel.setBounds(0, 0, panel.getIconWidth(), panel.getIconHeight());
         GameboardView.this.add(topPanel, new Integer(114514));
 
     }
-    
+
 }

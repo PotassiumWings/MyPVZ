@@ -185,8 +185,8 @@ public class Sun extends JLabel implements Runnable {
                     e1.printStackTrace();
                 }
             }
-        }else{
-            //disappear
+        } else {
+            // disappear
             this.shrink();
         }
         setVisible(false);
@@ -198,18 +198,20 @@ public class Sun extends JLabel implements Runnable {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        ImageIcon img = new ImageIcon("img\\Sun\\"+nowPic+".png");
-        //ImageIcon img = new ImageIcon("img\\Sun\\"+"etz"+nowPic+".png");
+        ImageIcon img = new ImageIcon("img\\Sun\\" + nowPic + ".png");
+        // ImageIcon img = new ImageIcon("img\\Sun\\"+"etz"+nowPic+".png");
         image = img.getImage();
         Graphics2D g2 = (Graphics2D) g;
         g2.setComposite(AlphaComposite.SrcOver.derive((float) alpha / 100));
-        g2.drawImage(image, 0, 0, img.getIconWidth()*6/7, img.getIconWidth()*6/7,  this);
+        g2.drawImage(image, 0, 0, img.getIconWidth() * 6 / 7, img.getIconWidth() * 6 / 7, this);
     }
+
     public void update(Graphics g) {
-        if(offScreenImage == null) offScreenImage = this.createImage(800, 600);
+        if (offScreenImage == null)
+            offScreenImage = this.createImage(800, 600);
         Graphics gImage = offScreenImage.getGraphics();
         paint(gImage);
         g.drawImage(offScreenImage, 0, 0, null);
     }
-    
+
 }

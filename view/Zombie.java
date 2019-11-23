@@ -14,7 +14,7 @@ public class Zombie extends JLabel implements Runnable {
     private static int DIE = 5;
     private static int BOOM = 6;
 
-    private static int BOOMINJURY = 1000;
+    private static int BOOMINJURY = 1800;
 
     private String name;
     // hp2:临界值
@@ -67,27 +67,27 @@ public class Zombie extends JLabel implements Runnable {
         img = new ImageIcon("img\\shadow.png");
         g.drawImage(img.getImage(), 70, 115, img.getIconWidth(), img.getIconHeight(), this);
         if (state == MOVE) {
-            Img = new ImageIcon("img\\"+name+"\\Zombie" + (type + 1) + "\\Frame" + nowPic + ".png");
+            Img = new ImageIcon("img\\" + name + "\\Zombie" + (type + 1) + "\\Frame" + nowPic + ".png");
             g2.drawImage(Img.getImage(), 0, 0, Img.getIconWidth(), Img.getIconHeight(), this);
         } else if (state == ATTACK) {
-            Img = new ImageIcon("img\\"+name+"\\ZombieAttack\\Frame" + nowPic + ".png");
+            Img = new ImageIcon("img\\" + name + "\\ZombieAttack\\Frame" + nowPic + ".png");
             g2.drawImage(Img.getImage(), 0, 0, Img.getIconWidth(), Img.getIconHeight(), this);
         } else if (state == LOSTHEAD) {
-            Img = new ImageIcon("img\\"+name+"\\ZombieLostHead\\Frame" + nowPic + ".png");
+            Img = new ImageIcon("img\\" + name + "\\ZombieLostHead\\Frame" + nowPic + ".png");
             g2.drawImage(Img.getImage(), 0, 0, Img.getIconWidth(), Img.getIconHeight(), this);
             // 头动画只持续前10帧
             if (nowPic < 10) {
-                Img = new ImageIcon("img\\"+name+"\\ZombieHead\\Frame" + nowPic + ".png");
+                Img = new ImageIcon("img\\" + name + "\\ZombieHead\\Frame" + nowPic + ".png");
                 g2.drawImage(Img.getImage(), 60, 0, Img.getIconWidth(), Img.getIconHeight(), this);
             }
         } else if (state == LOSTHEADATTACK) {
-            Img = new ImageIcon("img\\"+name+"\\ZombieLostHeadAttack\\Frame" + nowPic + ".png");
+            Img = new ImageIcon("img\\" + name + "\\ZombieLostHeadAttack\\Frame" + nowPic + ".png");
             g2.drawImage(Img.getImage(), 0, 0, Img.getIconWidth(), Img.getIconHeight(), this);
         } else if (state == DIE) {
-            Img = new ImageIcon("img\\"+name+"\\ZombieDie\\Frame" + nowPic + ".png");
+            Img = new ImageIcon("img\\" + name + "\\ZombieDie\\Frame" + nowPic + ".png");
             g2.drawImage(Img.getImage(), 0, 0, Img.getIconWidth(), Img.getIconHeight(), this);
         } else if (state == BOOM) {
-            Img = new ImageIcon("img\\"+name+"\\ZombieBoom\\Frame" + nowPic + ".png");
+            Img = new ImageIcon("img\\" + name + "\\ZombieBoom\\Frame" + nowPic + ".png");
             g2.drawImage(Img.getImage(), 0, 0, Img.getIconWidth(), Img.getIconHeight(), this);
         }
     }
@@ -95,12 +95,12 @@ public class Zombie extends JLabel implements Runnable {
     public Zombie normalZombie(Controller controller, int row) {
         Zombie tempZombie = new Zombie(controller, "NormalZombie", 200, 70, row, 4700 / 80);
         tempZombie.type = (int) Math.random() * 3;
-        tempZombie.moveSum=tempZombie.sumPic[type];
-        tempZombie.attackSum=21;
-        tempZombie.lostheadSum=17;
-        tempZombie.lostheadattackSum=11;
-        tempZombie.dieSum=17;
-        tempZombie.boomSum=17;
+        tempZombie.moveSum = tempZombie.sumPic[type];
+        tempZombie.attackSum = 21;
+        tempZombie.lostheadSum = 17;
+        tempZombie.lostheadattackSum = 11;
+        tempZombie.dieSum = 17;
+        tempZombie.boomSum = 17;
         controller.getLayeredPane().add(tempZombie, new Integer(400));
         return tempZombie;
     }
@@ -108,12 +108,12 @@ public class Zombie extends JLabel implements Runnable {
     public Zombie xsyZombie(Controller controller, int row) {
         Zombie tempZombie = new Zombie(controller, "xsyZombie", 400, 0, row, 4700 / 80);
         tempZombie.type = 0;
-        tempZombie.moveSum=1;
-        tempZombie.attackSum=1;
-        tempZombie.lostheadSum=1;
-        tempZombie.lostheadattackSum=1;
-        tempZombie.dieSum=8;
-        tempZombie.boomSum=1;
+        tempZombie.moveSum = 1;
+        tempZombie.attackSum = 1;
+        tempZombie.lostheadSum = 1;
+        tempZombie.lostheadattackSum = 1;
+        tempZombie.dieSum = 8;
+        tempZombie.boomSum = 1;
         controller.getLayeredPane().add(tempZombie, new Integer(400));
         return tempZombie;
     }
@@ -143,26 +143,34 @@ public class Zombie extends JLabel implements Runnable {
         } else if (hp < hp2) {
             if (this.state == ATTACK)
                 setState(LOSTHEADATTACK);
-            else if(this.state != LOSTHEAD && this.state != LOSTHEADATTACK)
+            else if (this.state != LOSTHEAD && this.state != LOSTHEADATTACK)
                 setState(LOSTHEAD);
         }
     }
 
+    public int getColumn() {
+        return (x + 60) / 80;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
     public Plant getPlant() {
         assert (findPlant());
-        return controller.getPlants()[row][(x + 60) / 80];
+        return controller.getPlants()[row][getColumn()];
     }
 
     public boolean findPlant() {
-        if ((x + 60) / 80 >= 9 || (x + 60) / 80 < 0)
+        if (getColumn() >= 9 || getColumn() < 0)
             return false;
-        return controller.getPlants()[row][(x + 60) / 80] != null;
+        return controller.getPlants()[row][getColumn()] != null;
     }
 
     public void reduceHP(int x) {
         this.hp -= x;
         updateState();
-        //System.out.println("reduced to "+hp+",state="+state);
+        // System.out.println("reduced to "+hp+",state="+state);
     }
 
     public void boom() {
@@ -174,7 +182,7 @@ public class Zombie extends JLabel implements Runnable {
         }
     }
 
-    public void endThread(){
+    public void endThread() {
         Thread.currentThread().interrupt();
     }
 
@@ -189,7 +197,7 @@ public class Zombie extends JLabel implements Runnable {
                     break;
                 }
                 // sleep 60ms, x--
-                for(int j = 0; j < 2; j++) {
+                for (int j = 0; j < 2; j++) {
                     for (int i = 0; i < 10 && this.state == MOVE; i++) {
                         try {
                             Thread.sleep(6);
@@ -201,41 +209,41 @@ public class Zombie extends JLabel implements Runnable {
                     this.setBounds(x, y, 400, 300);
                     this.repaint();
                 }
-                //120ms 
-                //System.out.println("name:"+name+"nowPic="+nowPic+"sumPic="+nowSumPic+"state="+state);
+                // 120ms
+                // System.out.println("name:"+name+"nowPic="+nowPic+"sumPic="+nowSumPic+"state="+state);
                 nowPic = (nowPic + 1) % nowSumPic;
-                if(x < -70){
+                if (x < -70) {
                     controller.endGame();
                 }
             }
 
             // ATTACK
             while (this.state == ATTACK) {
-                //if (this.name == "NormalZombie") {
-                    // 普通僵尸的攻击方式：1s 200伤害，5ms 1伤害
-                    // sleep 120ms change
-                    for (int i = 0; i < 24 && this.state == ATTACK && findPlant(); i++) {
-                        getPlant().attacked(1);
-                        try {
-                            Thread.sleep(5);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                // if (this.name == "NormalZombie") {
+                // 普通僵尸的攻击方式：1s 200伤害，5ms 1伤害
+                // sleep 120ms change
+                for (int i = 0; i < 24 && this.state == ATTACK && findPlant(); i++) {
+                    getPlant().attacked(1);
+                    try {
+                        Thread.sleep(5);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                    nowPic = (nowPic + 1) % nowSumPic;
-                    this.repaint();
-                    if (!findPlant() && this.state == ATTACK)
-                        setState(MOVE);// 不掉胳膊
-                    updateState();
-                //}
+                }
+                nowPic = (nowPic + 1) % nowSumPic;
+                this.repaint();
+                if (!findPlant() && this.state == ATTACK)
+                    setState(MOVE);// 不掉胳膊
+                updateState();
+                // }
             }
 
         }
         while (hp > 0) {
             // 临界状态
             while (this.state == LOSTHEAD || this.state == LOSTHEADATTACK) {
-                //sleep 60ms change
-                for(int j = 0; j < 2 && hp > 0; j++) {
+                // sleep 60ms change
+                for (int j = 0; j < 2 && hp > 0; j++) {
                     for (int i = 0; i < 10 && hp > 0; i++) {
                         try {
                             Thread.sleep(6);
@@ -243,16 +251,16 @@ public class Zombie extends JLabel implements Runnable {
                             e.printStackTrace();
                         }
                     }
-                    if(this.state == LOSTHEAD){
+                    if (this.state == LOSTHEAD) {
                         this.x--;
                         this.setBounds(x, y, 400, 300);
                     }
                     this.repaint();
                 }
-                //120ms 
+                // 120ms
                 nowPic = (nowPic + 1) % nowSumPic;
                 reduceHP(7);
-                if(x < -70){
+                if (x < -70) {
                     controller.endGame();
                 }
             }
@@ -260,9 +268,9 @@ public class Zombie extends JLabel implements Runnable {
         controller.deleteZombie(this, row);
 
         // 死亡
-        if(this.state == DIE){       
+        if (this.state == DIE) {
             for (nowPic = 0; nowPic < nowSumPic; nowPic++) {
-                //sleep 120ms change
+                // sleep 120ms change
                 try {
                     Thread.sleep(120);
                 } catch (InterruptedException e) {
@@ -275,7 +283,7 @@ public class Zombie extends JLabel implements Runnable {
         // 爆炸
         if (this.state == BOOM) {
             for (nowPic = 0; nowPic < nowSumPic; nowPic++) {
-                //sleep 120ms change
+                // sleep 120ms change
                 try {
                     Thread.sleep(120);
                 } catch (InterruptedException e) {

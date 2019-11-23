@@ -51,11 +51,11 @@ public class Bullet extends JLabel implements Runnable {
                 break;
             }
             try {
-                Thread.sleep(10);
+                Thread.sleep(5);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            x += 3;
+            x += 2;
             this.setBounds(x, y, img.getIconWidth(), img.getIconHeight());
             this.repaint();
             if (x > 810)
