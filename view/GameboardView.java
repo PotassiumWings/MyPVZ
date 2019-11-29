@@ -5,8 +5,6 @@ import controller.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import javax.swing.*;
 
 public class GameboardView extends JLayeredPane {
@@ -81,8 +79,8 @@ public class GameboardView extends JLayeredPane {
                                                                                                                                 : i < 549
                                                                                                                                         ? 6
                                                                                                                                         : i < 550
-                                                                                                                                                ? 8
-                                                                                                                                                : 14;
+                                                                                                                                                ? 7
+                                                                                                                                                : 8;
                 if (j > 0) {
                     delaytime = j < 1 ? 12
                             : j < 2 ? 11
@@ -108,8 +106,8 @@ public class GameboardView extends JLayeredPane {
                                                                                                                                                     : j < 333
                                                                                                                                                             ? 6
                                                                                                                                                             : j < 334
-                                                                                                                                                                    ? 8
-                                                                                                                                                                    : 14;
+                                                                                                                                                                    ? 7
+                                                                                                                                                                    : 10;
                 }
                 try {
                     Thread.sleep(delaytime);
@@ -201,7 +199,6 @@ public class GameboardView extends JLayeredPane {
         Cardboard.add(SunLabel);
 
         controller.setLayeredPane(this);
-        // controller.setFrame(launchframe);
         controller.setSunCount(SunLabel);
 
         // shovel bank
@@ -234,56 +231,51 @@ public class GameboardView extends JLayeredPane {
             }
         });
 
-        Executor exec = Executors.newSingleThreadExecutor();
-        if (!flag) {
-            Thread Animation = new Thread(new PaintThread(launchframe));
-            exec.execute(Animation);
+        // cards
+        Card card1 = new Card("SunFlower", controller);
+        card1.setRectangle(83, 7, card1.getCardWidth(), card1.getCardHeight());
+        card1.setBounds(83, 7, card1.getCardWidth(), card1.getCardHeight());
+        controller.addCard(card1);
+        Cardboard.add(card1);
 
-            Card card1 = new Card("SunFlower", controller);
-            card1.setRectangle(83, 7, card1.getCardWidth(), card1.getCardHeight());
-            card1.setBounds(83, 7, card1.getCardWidth(), card1.getCardHeight());
-            controller.addCard(card1);
-            Cardboard.add(card1);
+        Card card2 = new Card("PeaShooter", controller);
+        card2.setRectangle(142, 7, card2.getCardWidth(), card2.getCardHeight());
+        card2.setBounds(142, 7, card2.getCardWidth(), card2.getCardHeight());
+        controller.addCard(card2);
+        Cardboard.add(card2);
 
-            Card card2 = new Card("PeaShooter", controller);
-            card2.setRectangle(142, 7, card2.getCardWidth(), card2.getCardHeight());
-            card2.setBounds(142, 7, card2.getCardWidth(), card2.getCardHeight());
-            controller.addCard(card2);
-            Cardboard.add(card2);
+        Card card3 = new Card("Repeater", controller);
+        card3.setRectangle(201, 7, card3.getCardWidth(), card3.getCardHeight());
+        card3.setBounds(201, 7, card3.getCardWidth(), card3.getCardHeight());
+        controller.addCard(card3);
+        Cardboard.add(card3);
 
-            Card card3 = new Card("Repeater", controller);
-            card3.setRectangle(201, 7, card3.getCardWidth(), card3.getCardHeight());
-            card3.setBounds(201, 7, card3.getCardWidth(), card3.getCardHeight());
-            controller.addCard(card3);
-            Cardboard.add(card3);
+        Card card4 = new Card("CherryBomb", controller);
+        card4.setRectangle(260, 7, card4.getCardWidth(), card4.getCardHeight());
+        card4.setBounds(260, 7, card4.getCardWidth(), card4.getCardHeight());
+        controller.addCard(card4);
+        Cardboard.add(card4);
 
-            Card card4 = new Card("CherryBomb", controller);
-            card4.setRectangle(260, 7, card4.getCardWidth(), card4.getCardHeight());
-            card4.setBounds(260, 7, card4.getCardWidth(), card4.getCardHeight());
-            controller.addCard(card4);
-            Cardboard.add(card4);
+        Card card5 = new Card("WallNut", controller);
+        card5.setRectangle(319, 7, card5.getCardWidth(), card5.getCardHeight());
+        card5.setBounds(319, 7, card5.getCardWidth(), card5.getCardHeight());
+        controller.addCard(card5);
+        Cardboard.add(card5);
 
-            Card card5 = new Card("WallNut", controller);
-            card5.setRectangle(319, 7, card5.getCardWidth(), card5.getCardHeight());
-            card5.setBounds(319, 7, card5.getCardWidth(), card5.getCardHeight());
-            controller.addCard(card5);
-            Cardboard.add(card5);
+        // animation
+        Thread Animation = new Thread(new PaintThread(launchframe));
+        Animation.start();
 
-        } else {
-            x = -215;
-            Cardboard.setBounds(20, 5, cardboard.getIconWidth(), cardboard.getIconHeight());
-            Panel.repaint();
-            Panel.setVisible(true);
-            controller.checkCards();
-        }
-
-        sunThread = new Thread(new SunProducer(controller));// produce sun
+        // produce sun
+        sunThread = new Thread(new SunProducer(controller));
         sunThread.start();
 
-        zombieThread = new Thread(new ZombieProducer(controller));// produce zombie
+        // produce zombie
+        zombieThread = new Thread(new ZombieProducer(controller));
         zombieThread.start();
 
-        JPanel topPanel = controller.getTopPanel();// mouse img
+        // mouse img
+        JPanel topPanel = controller.getTopPanel();
         topPanel.setVisible(false);
         topPanel.setOpaque(false);
         topPanel.setBounds(0, 0, panel.getIconWidth(), panel.getIconHeight());

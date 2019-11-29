@@ -143,11 +143,7 @@ public class Card extends JLabel implements MouseListener, Runnable {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (isChoosed) {
-            isChoosed = false;
-        } else {
-            selected();
-        }
+        selected();
     }
 
     @Override

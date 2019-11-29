@@ -18,10 +18,10 @@ public class Plant extends JLabel implements Runnable {
     private int pic = 0;
     private int SumPic = 0;
 
-    private int CD; // 向日葵冷却时间
-    private int Cnow = 0; // 向日葵积累时间
+    private int CD; // 冷却时间
+    private int Cnow = 0; // 积累时间
 
-    private boolean canChange = false; // 图像是否为gif（区分card）
+    private boolean canChange = false; // 
     private Controller controller;
     private int row, column;
 
@@ -252,7 +252,7 @@ public class Plant extends JLabel implements Runnable {
     // price attack hp sumpic canchange
     public Plant SunFlower() {
         Plant tempPlant = new Plant("SunFlower", 50, 0, 300, 17, true);
-        tempPlant.CD = 12000 / 90;
+        tempPlant.CD = 24000 / 90;
         tempPlant.cardCD = 3500;// 7500;
         tempPlant.sleepTime = 90;
         return tempPlant;

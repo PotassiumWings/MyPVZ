@@ -11,7 +11,7 @@ public class LaunchFrame extends JFrame {
     public JLayeredPane layeredPane = new JLayeredPane();
     private GameboardView gameboardview;
 
-    public void reset(){
+    public void reset() {
         gameboardview.reset();
         System.exit(0);
     }
@@ -80,6 +80,7 @@ public class LaunchFrame extends JFrame {
         ImageIcon helpPic = new ImageIcon("img\\help.png");
         JLabel helpView = new JLabel(helpPic) {
             private static final long serialVersionUID = 1L;
+
             public void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 g.drawImage(helpPic.getImage(), 0, 0, 810, 625, this);
@@ -95,8 +96,8 @@ public class LaunchFrame extends JFrame {
         JLabel helpReturnButton = new JLabel();
         helpReturnButton.setBounds(325, 543, 155, 40);
         helpReturnButton.setVisible(false);
-        helpReturnButton.addMouseListener(new MouseAdapter(){
-            public void mouseClicked(MouseEvent e){
+        helpReturnButton.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
                 helpView.setVisible(false);
                 helpReturnButton.setVisible(false);
                 startLabel.setVisible(true);
@@ -104,7 +105,7 @@ public class LaunchFrame extends JFrame {
                 helpLabel.setVisible(true);
             }
         });
-        layeredPane.add(helpReturnButton,new Integer(114515));
+        layeredPane.add(helpReturnButton, new Integer(114515));
 
         helpLabel.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent e) {
