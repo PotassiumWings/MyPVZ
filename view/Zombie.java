@@ -2,6 +2,7 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
+
 import controller.*;
 
 public class Zombie extends JLabel implements Runnable {
@@ -31,6 +32,10 @@ public class Zombie extends JLabel implements Runnable {
     private int moveSum, attackSum, lostheadattackSum, lostheadSum, dieSum, boomSum;
     private int nowSumPic;
     private int nowPic = 0;
+    private int headPic = 0;
+
+    private int headPos;
+
     private int type;
 
     private Controller controller;
@@ -57,6 +62,7 @@ public class Zombie extends JLabel implements Runnable {
         this.sumPic[1] = 31;
         this.sumPic[2] = 18;
         this.setState(MOVE);
+        this.headPos = (int) (Math.random() * 60 + 30);
     }
 
     @Override
@@ -72,17 +78,17 @@ public class Zombie extends JLabel implements Runnable {
         } else if (state == ATTACK) {
             Img = new ImageIcon("img\\" + name + "\\ZombieAttack\\Frame" + nowPic + ".png");
             g2.drawImage(Img.getImage(), 0, 0, Img.getIconWidth(), Img.getIconHeight(), this);
-        } else if (state == LOSTHEAD) {
-            Img = new ImageIcon("img\\" + name + "\\ZombieLostHead\\Frame" + nowPic + ".png");
+        } else if (state == LOSTHEAD || state == LOSTHEADATTACK) {
+            if(state == LOSTHEAD)
+                Img = new ImageIcon("img\\" + name + "\\ZombieLostHead\\Frame" + nowPic + ".png");
+            else
+                Img = new ImageIcon("img\\" + name + "\\ZombieLostHeadAttack\\Frame" + nowPic + ".png");
             g2.drawImage(Img.getImage(), 0, 0, Img.getIconWidth(), Img.getIconHeight(), this);
             // 头动画只持续前10帧
-            if (nowPic < 10) {
-                Img = new ImageIcon("img\\" + name + "\\ZombieHead\\Frame" + nowPic + ".png");
-                g2.drawImage(Img.getImage(), 60, 0, Img.getIconWidth(), Img.getIconHeight(), this);
+            if (headPic < 10) {
+                Img = new ImageIcon("img\\" + name + "\\ZombieHead\\Frame" + headPic + ".png");
+                g2.drawImage(Img.getImage(), headPos, 0, Img.getIconWidth()*5/6, Img.getIconHeight()*5/6, this);
             }
-        } else if (state == LOSTHEADATTACK) {
-            Img = new ImageIcon("img\\" + name + "\\ZombieLostHeadAttack\\Frame" + nowPic + ".png");
-            g2.drawImage(Img.getImage(), 0, 0, Img.getIconWidth(), Img.getIconHeight(), this);
         } else if (state == DIE) {
             Img = new ImageIcon("img\\" + name + "\\ZombieDie\\Frame" + nowPic + ".png");
             g2.drawImage(Img.getImage(), 0, 0, Img.getIconWidth(), Img.getIconHeight(), this);
@@ -143,8 +149,10 @@ public class Zombie extends JLabel implements Runnable {
         } else if (hp < hp2) {
             if (this.state == ATTACK)
                 setState(LOSTHEADATTACK);
-            else if (this.state != LOSTHEAD && this.state != LOSTHEADATTACK)
+            else if (this.state != LOSTHEAD && this.state != LOSTHEADATTACK) {
                 setState(LOSTHEAD);
+                headPic = 0;
+            }
         }
     }
 
@@ -255,11 +263,12 @@ public class Zombie extends JLabel implements Runnable {
                         this.x--;
                         this.setBounds(x, y, 400, 300);
                     }
+                    headPic++;
                     this.repaint();
                 }
                 // 120ms
                 nowPic = (nowPic + 1) % nowSumPic;
-                reduceHP(7);
+                reduceHP(3);
                 if (x < -70) {
                     controller.endGame();
                 }

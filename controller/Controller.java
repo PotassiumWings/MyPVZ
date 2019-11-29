@@ -31,7 +31,10 @@ public class Controller {
     private static int numRow = 5, numCol = 9;// 行列个数
     private static int cardNum = 1;// 卡牌区个数
     private Card[] Cards = new Card[10];// 需要初始化
-    private Card card;// 当前选中的card
+    private Card card = null;// 当前选中的card
+
+    // shovel
+    private Shovel shovel;
 
     // sun
     private JLabel sunCount = new JLabel();
@@ -155,6 +158,12 @@ public class Controller {
         return Integer.parseInt(this.sunCount.getText());
     }
 
+    public void reduceSun(int x) {
+        int sun = getIntSunCount();
+        sun -= x;
+        setSunCount(sun);
+    }
+
     public Map<String, Plant> getPlantMap() {
         return plantMap;
     }
@@ -196,7 +205,7 @@ public class Controller {
         return false;
     }
 
-    // 鼠标移动效果，选中的植物
+    // 鼠标移动效果，选中的植物/铲子
     class TopPanel extends JPanel {
         private static final long serialVersionUID = 1L;
         Graphics2D g2;
@@ -235,7 +244,7 @@ public class Controller {
     }
 
     public void addCard(Card card) {
-        assert (cardNum < 10);
+        // assert (cardNum < 10);
         Cards[cardNum] = card;
         card.setIndex(cardNum);
         new Thread(card).start();
@@ -266,6 +275,34 @@ public class Controller {
         return selectedIndex;
     }
 
+    private boolean selectingShovel = false;
+
+    public void setShovel(Shovel shovel) {
+        this.shovel = shovel;
+    }
+
+    public void setShovel(boolean b) {
+        this.selectingShovel = b;
+        if (b) {
+            ImageIcon pre;
+            pre = new ImageIcon("img\\Shovel.png");
+            setBlurImg(pre);
+            setPreImg(pre);
+            topPanel.setVisible(true);
+        } else {
+            topPanel.setVisible(false);
+            shovel.setVisible(true);
+        }
+    }
+
+    public void cancelSelectingCard() {
+        card.setChoosed(false);
+        card = null;
+        selectedIndex = -1;
+        nowPlant = null;
+        topPanel.setVisible(false);
+    }
+
     class myMouseListener extends MouseAdapter implements MouseMotionListener {
         private TopPanel topPanel;
 
@@ -278,30 +315,46 @@ public class Controller {
             if (p == null)
                 return;
 
+            if (shovel.getBounds().contains(p)) {
+                return;
+            }
+
+            if (e.getButton() == MouseEvent.BUTTON3) {// right click, cancel choosing card
+                if (card != null) {
+                    cancelSelectingCard();
+                } else if (selectingShovel) {
+                    selectingShovel = false;
+                    setShovel(false);
+                    topPanel.setVisible(false);
+                }
+                return;
+            }
+
             for (int i = 0; i < cardNum; i++) {
                 if ((Cards[i].getRectangle()).contains(p)) {
                     return;
                 }
             }
-
-            int x = p.x, y = p.y;
-            int grassR = (y - cardHeight) / tileHeight, grassC = (x - cardWidth) / tileWidth;
-            // 种植
-            if (nowPlant != null && isOnGrass(grassR, grassC) && plants[grassR][grassC] == null) {
-                plant(grassR, grassC, nowPlant);
-                int sun = getIntSunCount();
-                sun -= nowPlant.getPrice();
-                setSunCount(sun);
-            } else {
-                // 取消选中
-                if (selectedIndex != -1) {
-                    Cards[selectedIndex].setInCooling(false);
-                    Cards[selectedIndex].check(getIntSunCount());
+            if (e.getButton() == MouseEvent.BUTTON1) {// left click
+                int x = p.x, y = p.y;
+                int grassR = (y - cardHeight) / tileHeight, grassC = (x - cardWidth) / tileWidth;
+                // plant or displant
+                if (isOnGrass(grassR, grassC)) {
+                    if (nowPlant != null && plants[grassR][grassC] == null && !selectingShovel) {
+                        // plant
+                        plant(grassR, grassC, nowPlant);
+                        reduceSun(nowPlant.getPrice());
+                        cancelSelectingCard();
+                    } else if (nowPlant == null && plants[grassR][grassC] != null && selectingShovel) {
+                        // remove
+                        plants[grassR][grassC].die();
+                        plants[grassR][grassC] = null;
+                        setShovel(false);
+                    }
                 }
+
             }
-            selectedIndex = -1;
-            topPanel.setVisible(false);
-            nowPlant = null;
+
         }
 
         public void mouseMoved(MouseEvent e) {
@@ -345,19 +398,28 @@ public class Controller {
         }
     }
 
+    public void setRunning() {
+        this.isRunning = true;
+
+        for (int i = 0; i < cardNum; i++) {
+            Cards[i].setInCooling(false);
+        }
+
+        checkCards();
+    }
+
     public Controller() {
         setCardMap();
         for (int i = 0; i < 5; i++) {
             Zombies.add(new ArrayList<>());
         }
+
         cardNum = 0;
+
         this.setSunCount(500);
         this.topPanel.addMouseMotionListener(new myMouseListener(this.topPanel));
         this.topPanel.addMouseListener(new myMouseListener(this.topPanel));
         this.topPanel.setVisible(false);
-        isRunning = true;
-        for (int i = 0; i < cardNum; i++) {
-            Cards[i].setInCooling(false);
-        }
+
     }
 }

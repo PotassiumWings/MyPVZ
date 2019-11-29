@@ -2,7 +2,9 @@ package view;
 
 import controller.*;
 
-import java.awt.Graphics;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import javax.swing.*;
@@ -11,9 +13,12 @@ public class GameboardView extends JLayeredPane {
 
     private static final long serialVersionUID = 1L;
     private JFrame GameFrame;
-    private ImageIcon panel, cardboard;
+    private ImageIcon panel, cardboard, shovelbank;
     private JPanel Panel;
     private JPanel Cardboard;
+    private JPanel ShovelBank;
+
+    private Shovel shovel;
 
     Controller controller;
 
@@ -111,6 +116,7 @@ public class GameboardView extends JLayeredPane {
             // cardboard淡入
             for (int y = -40; y <= 5; y++) {
                 Cardboard.setBounds(20, y, cardboard.getIconWidth(), cardboard.getIconHeight());
+                ShovelBank.setBounds(465, y, shovelbank.getIconWidth(), shovelbank.getIconHeight());
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
@@ -118,6 +124,9 @@ public class GameboardView extends JLayeredPane {
                 }
                 Cardboard.repaint();
             }
+
+            // System.out.println(shovel.getImg().getIconWidth()+","+shovel.getImg().getIconHeight());
+            shovel.setBounds(458, -5, shovel.getImg().getIconWidth(), shovel.getImg().getIconHeight());
 
             // 倒计时
             JLabel label;
@@ -133,12 +142,13 @@ public class GameboardView extends JLayeredPane {
                 }
             }
 
+            controller.setRunning();
+
             try {
                 Thread.sleep(800);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
         }
     }
 
@@ -185,6 +195,36 @@ public class GameboardView extends JLayeredPane {
         // controller.setFrame(launchframe);
         controller.setSunCount(SunLabel);
 
+        // shovel bank
+        shovelbank = new ImageIcon("img\\ShovelBank.png");
+        ShovelBank = new JPanel() {
+            private static final long serialVersionUID = 1L;
+
+            public void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(shovelbank.getImage(), 0, 0, shovelbank.getIconWidth(), shovelbank.getIconHeight(), this);
+            }
+        };
+        ShovelBank.setVisible(true);
+        GameboardView.this.add(ShovelBank, 0);
+
+        // shovel
+        shovel = new Shovel(controller);
+        shovel.setVisible(true);
+        controller.setShovel(shovel);
+        GameboardView.this.add(shovel, new Integer(2));
+        shovel.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                shovel.selected();
+            }
+
+            public void mouseEntered(MouseEvent e) {
+            }
+
+            public void mouseExited(MouseEvent e) {
+            }
+        });
+
         Executor exec = Executors.newSingleThreadExecutor();
         if (!flag) {
             Thread Animation = new Thread(new PaintThread(launchframe));
@@ -219,6 +259,7 @@ public class GameboardView extends JLayeredPane {
             card5.setBounds(319, 7, card5.getCardWidth(), card5.getCardHeight());
             controller.addCard(card5);
             Cardboard.add(card5);
+
         } else {
             x = -215;
             Cardboard.setBounds(20, 5, cardboard.getIconWidth(), cardboard.getIconHeight());
@@ -233,7 +274,7 @@ public class GameboardView extends JLayeredPane {
         Thread zombieThread = new Thread(new ZombieProducer(controller));// produce zombie
         zombieThread.start();
 
-        JPanel topPanel = controller.getTopPanel();
+        JPanel topPanel = controller.getTopPanel();// mouse img
         topPanel.setVisible(false);
         topPanel.setOpaque(false);
         topPanel.setBounds(0, 0, panel.getIconWidth(), panel.getIconHeight());

@@ -13,12 +13,22 @@ public class ZombieProducer implements Runnable {
 
     @Override
     public void run() {
+
         try {
-            Thread.sleep(5000);
+            Thread.sleep(00);
             // 开局20s无生成
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        while (!controller.isRunning) {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
         while (controller.isRunning) {
             try {
                 Thread.sleep((int) (Math.random() * 250) + 5000);

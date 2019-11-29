@@ -15,7 +15,7 @@ public class Bullet extends JLabel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        g2.drawImage(img.getImage(), 0, 0, img.getIconWidth(), img.getIconHeight(),  this);
+        g2.drawImage(img.getImage(), 0, 0, img.getIconWidth(), img.getIconHeight(), this);
     }
 
     public Bullet() {
@@ -71,5 +71,5 @@ public class Bullet extends JLabel implements Runnable {
         setVisible(false);
         Thread.currentThread().interrupt();
     }
-    
+
 }

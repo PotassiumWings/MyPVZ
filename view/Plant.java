@@ -109,7 +109,8 @@ public class Plant extends JLabel implements Runnable {
         pic = (pic + 1) % SumPic;
         img = new ImageIcon("img\\" + this.name + "\\" + this.name + "_" + pic + ".png");
         if (this.getName() == "WallNut") {
-            img = new ImageIcon("img\\" + this.name + "\\" + this.name + "_cracked" + state + "\\" + this.name + "_cracked" + state + "_" + pic + ".png");
+            img = new ImageIcon("img\\" + this.name + "\\" + this.name + "_cracked" + state + "\\" + this.name
+                    + "_cracked" + state + "_" + pic + ".png");
         }
     }
 
@@ -138,6 +139,7 @@ public class Plant extends JLabel implements Runnable {
         // System.out.println(name + " is dead.");
         controller.plantDeath(row, column);
         this.setVisible(false);
+        hp = -1;
         Thread.currentThread().interrupt();
     }
 

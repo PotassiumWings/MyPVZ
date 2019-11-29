@@ -14,6 +14,7 @@ public class Card extends JLabel implements MouseListener, Runnable {
 
     private static final long serialVersionUID = 1L;
     private boolean inCooling;
+    private boolean isChoosed;
     private int cd;
     private int totTime;
 
@@ -25,6 +26,7 @@ public class Card extends JLabel implements MouseListener, Runnable {
     private ImageIcon card;
     private ImageIcon cardLight;
     private ImageIcon cardDark;
+    private ImageIcon cardCooling;
 
     private ImageIcon preImg;
     private ImageIcon blurImg;
@@ -59,10 +61,11 @@ public class Card extends JLabel implements MouseListener, Runnable {
         this.cardName = name;
         this.cardLight = new ImageIcon("Img\\Cards\\" + cardName + "0.png");
         this.cardDark = new ImageIcon("Img\\Cards\\" + cardName + "1.png");
+        this.cardCooling = new ImageIcon("Img\\Cards\\" + cardName + "2.png");
         this.preImg = new ImageIcon("img\\" + cardName + "\\" + cardName + "_0.png ");
         this.blurImg = new ImageIcon("img\\Blurs\\" + cardName + ".png ");
         this.card = cardDark;
-        this.inCooling = false;
+        this.inCooling = true;
         this.addMouseListener(this);
         this.cardHeight = cardLight.getIconHeight();
         this.cardWidth = cardLight.getIconWidth();
@@ -71,8 +74,12 @@ public class Card extends JLabel implements MouseListener, Runnable {
         // this.y = card.getIconHeight();
     }
 
+    public boolean sunCountEnough(int SunCount) {
+        return SunCount >= plantMap.get(this.cardName).getPrice();
+    }
+
     public void check(int SunCount) {// 能否选择这个卡，能：light，否：dark
-        if (SunCount >= plantMap.get(this.cardName).getPrice() && !inCooling) {
+        if (sunCountEnough(SunCount) && !inCooling) {
             card = cardLight;
             this.repaint();
         } else {
@@ -108,12 +115,15 @@ public class Card extends JLabel implements MouseListener, Runnable {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        // int h=card.getIconHeight();
-        g.drawImage(card.getImage(), 0, 0, card.getIconWidth(), card.getIconHeight(), this);
-        // g.drawImage(card.getImage(), 0, h-h*totTime/cd, card.getIconWidth(),
-        // h*totTime/cd, this);
-        // g.drawImage(cardDark.getImage(), 0, y, card.getIconWidth(),
-        // card.getIconHeight(), this);
+        int h = card.getIconHeight(), w = card.getIconWidth();
+        g.drawImage(card.getImage(), 0, 0, w, h, this);
+        if (inCooling) {
+            g.drawImage(cardCooling.getImage(), 0, 0, w, h - h * totTime / cd, 0, 0, w, h - h * totTime / cd, this);
+        }
+    }
+
+    public void setChoosed(boolean choosed) {
+        this.isChoosed = choosed;
     }
 
     public void selected() {// 卡牌被选中
@@ -126,13 +136,18 @@ public class Card extends JLabel implements MouseListener, Runnable {
             controller.nowPlant = new Plant().getPlant(this.getCardName());
             // System.out.println("Selected :" + controller.nowPlant.getName());
             inCooling = true;
+            isChoosed = true;
             check(0);
         }
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        selected();
+        if (isChoosed) {
+            isChoosed = false;
+        } else {
+            selected();
+        }
     }
 
     @Override
@@ -153,8 +168,15 @@ public class Card extends JLabel implements MouseListener, Runnable {
 
     @Override
     public void run() {
+        while (!controller.isRunning) {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         while (controller.isRunning) {
-            while (controller.isRunning && !inCooling) {
+            while (controller.isRunning && (!inCooling || (inCooling && isChoosed))) {
                 check(controller.getIntSunCount());
                 try {
                     Thread.sleep(4);

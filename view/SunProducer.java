@@ -2,20 +2,30 @@ package view;
 
 import controller.*;
 
-public class SunProducer implements Runnable{
+public class SunProducer implements Runnable {
     private Controller controller;
-    
-    SunProducer(Controller controller){
+
+    SunProducer(Controller controller) {
         this.controller = controller;
     }
 
     @Override
     public void run() {
+        
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        while (!controller.isRunning) {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
         while (controller.isRunning){
             try {
                 Thread.sleep((int) (Math.random()*1000)+4000);
