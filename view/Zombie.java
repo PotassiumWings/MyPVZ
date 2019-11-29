@@ -79,7 +79,7 @@ public class Zombie extends JLabel implements Runnable {
             Img = new ImageIcon("img\\" + name + "\\ZombieAttack\\Frame" + nowPic + ".png");
             g2.drawImage(Img.getImage(), 0, 0, Img.getIconWidth(), Img.getIconHeight(), this);
         } else if (state == LOSTHEAD || state == LOSTHEADATTACK) {
-            if(state == LOSTHEAD)
+            if (state == LOSTHEAD)
                 Img = new ImageIcon("img\\" + name + "\\ZombieLostHead\\Frame" + nowPic + ".png");
             else
                 Img = new ImageIcon("img\\" + name + "\\ZombieLostHeadAttack\\Frame" + nowPic + ".png");
@@ -87,7 +87,7 @@ public class Zombie extends JLabel implements Runnable {
             // 头动画只持续前10帧
             if (headPic < 10) {
                 Img = new ImageIcon("img\\" + name + "\\ZombieHead\\Frame" + headPic + ".png");
-                g2.drawImage(Img.getImage(), headPos, 0, Img.getIconWidth()*5/6, Img.getIconHeight()*5/6, this);
+                g2.drawImage(Img.getImage(), headPos, 0, Img.getIconWidth() * 5 / 6, Img.getIconHeight() * 5 / 6, this);
             }
         } else if (state == DIE) {
             Img = new ImageIcon("img\\" + name + "\\ZombieDie\\Frame" + nowPic + ".png");
@@ -213,7 +213,7 @@ public class Zombie extends JLabel implements Runnable {
                             e.printStackTrace();
                         }
                     }
-                    this.x--;
+                    this.x -= 1;
                     this.setBounds(x, y, 400, 300);
                     this.repaint();
                 }

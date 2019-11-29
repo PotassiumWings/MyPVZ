@@ -19,7 +19,7 @@ import javax.swing.JPanel;
 
 public class Controller {
     // appearance
-    private JFrame frame;
+    private LaunchFrame frame;
     private static int cardHeight = 90, cardWidth = 45;
     private static int tileHeight = 100, tileWidth = 80;
 
@@ -116,6 +116,7 @@ public class Controller {
             }
         }
         this.isRunning = false;
+        frame.reset();
     }
 
     public Plant[][] getPlants() {
@@ -130,7 +131,7 @@ public class Controller {
         return layeredPane;
     }
 
-    public void setFrame(JFrame frame) {
+    public void setFrame(LaunchFrame frame) {
         this.frame = frame;
     }
 
@@ -348,7 +349,6 @@ public class Controller {
                     } else if (nowPlant == null && plants[grassR][grassC] != null && selectingShovel) {
                         // remove
                         plants[grassR][grassC].die();
-                        plants[grassR][grassC] = null;
                         setShovel(false);
                     }
                 }
@@ -408,7 +408,9 @@ public class Controller {
         checkCards();
     }
 
-    public Controller() {
+    public Controller(LaunchFrame launchframe) {
+        frame = launchframe;
+
         setCardMap();
         for (int i = 0; i < 5; i++) {
             Zombies.add(new ArrayList<>());

@@ -15,8 +15,8 @@ public class ZombieProducer implements Runnable {
     public void run() {
 
         try {
-            Thread.sleep(00);
-            // 开局20s无生成
+            Thread.sleep(10000);
+            // 开局10s无生成
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

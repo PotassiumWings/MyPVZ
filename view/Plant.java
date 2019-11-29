@@ -136,10 +136,10 @@ public class Plant extends JLabel implements Runnable {
     }
 
     public void die() {
+        hp = -1;
         // System.out.println(name + " is dead.");
         controller.plantDeath(row, column);
         this.setVisible(false);
-        hp = -1;
         Thread.currentThread().interrupt();
     }
 
@@ -227,7 +227,7 @@ public class Plant extends JLabel implements Runnable {
                     this.setBounds(5 + column * 80, 40 + row * 100, 300, 300);
                     controller.boom(row, column);
                     try {
-                        Thread.sleep(700);
+                        Thread.sleep(400);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -275,7 +275,7 @@ public class Plant extends JLabel implements Runnable {
     }
 
     public Plant CherryBomb() {
-        Plant tempPlant = new Plant("CherryBomb", 150, 0, 1, 8, true);
+        Plant tempPlant = new Plant("CherryBomb", 150, 0, 1000000, 8, true);
         tempPlant.CD = 1000000;
         tempPlant.cardCD = 10000;// 12500;
         tempPlant.sleepTime = 90;

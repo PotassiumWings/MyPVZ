@@ -27,6 +27,13 @@ public class GameboardView extends JLayeredPane {
     private int direction = 1;
     private JLabel SunLabel;
 
+    Thread sunThread, zombieThread;
+
+    public void reset() {
+        sunThread.interrupt();
+        zombieThread.interrupt();
+    }
+
     class PaintThread implements Runnable {
         JFrame frame;
 
@@ -149,11 +156,13 @@ public class GameboardView extends JLayeredPane {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+            Thread.currentThread().interrupt();
         }
     }
 
     GameboardView(LaunchFrame launchframe) {
-        this.controller = new Controller();
+        this.controller = new Controller(launchframe);
         this.GameFrame = launchframe;
         this.GameFrame.setContentPane(GameboardView.this);
         this.setVisible(true);
@@ -268,10 +277,10 @@ public class GameboardView extends JLayeredPane {
             controller.checkCards();
         }
 
-        Thread sunThread = new Thread(new SunProducer(controller));// produce sun
+        sunThread = new Thread(new SunProducer(controller));// produce sun
         sunThread.start();
 
-        Thread zombieThread = new Thread(new ZombieProducer(controller));// produce zombie
+        zombieThread = new Thread(new ZombieProducer(controller));// produce zombie
         zombieThread.start();
 
         JPanel topPanel = controller.getTopPanel();// mouse img
